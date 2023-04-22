@@ -8,8 +8,8 @@ const Dashboard: NextPage = () => {
 		<div className="flex bg-gray-200">
 			<Sidebar />
 			<div className="container mx-auto mt-12 px-16">
-				<nav className="flex justify-between items-center mb-6">
-					<h1 className="text-3xl font-bold">Dashboard</h1>
+				<nav className="flex flex-col justify-between items-center mb-6 sm:flex-row">
+					<h1 className="text-3xl font-bold mb-3 md:mb-0">Dashboard</h1>
 					<MonthSelect />
 				</nav>
 				<div className="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-6 lg:grid-rows-1">
@@ -17,6 +17,11 @@ const Dashboard: NextPage = () => {
 					<div className="flex flex-col gap-4 lg:row-span-1 lg:col-span-2 lg:justify-start">
 						<Card title="Total expenses for the month" value="$2900" />
 						<Card title="Daily average" value="$111.56" />
+						<Card
+							title="Most frequent expense"
+							value="$143.72"
+							subtitle="Chipotle"
+						/>
 					</div>
 				</div>
 
@@ -65,11 +70,18 @@ const MonthSelect = () => {
 const Card: React.FC<{
 	title: string;
 	value: string;
+	subtitle?: string;
 }> = props => {
 	return (
 		<div className="w-full px-4 py-5 bg-white rounded-lg shadow">
 			<div className="text-sm font-medium text-gray-500 truncate">
-				{props.title}
+				{props.subtitle ? (
+					<p>
+						{props.title}: {props.subtitle}
+					</p>
+				) : (
+					<p>{props.title}</p>
+				)}
 			</div>
 			<div className="mt-1 text-3xl font-semibold text-gray-900">
 				{props.value}

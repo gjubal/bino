@@ -1,6 +1,10 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { NextPage } from 'next/types';
+import { useCallback } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { CreateUserInput, createUserSchema } from '../schemas/user.schema';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const SignUp: NextPage = () => {
 	// const hello = trpc.useQuery(['example.hello', { text: 'from tRPC' }]);
@@ -19,55 +23,68 @@ const SignUp: NextPage = () => {
 };
 
 const SignUpComponent = () => {
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<CreateUserInput>({
+		resolver: zodResolver(createUserSchema),
+	});
+	const onSubmit: SubmitHandler<CreateUserInput> = useCallback(
+		data => alert(JSON.stringify(data)),
+		[]
+	);
+
 	return (
-		<section className="h-full bg-gray-200 md:h-screen">
+		<section className="bg-gray-200 h-screen">
 			<div className="flex justify-center items-center h-full">
 				<div className="w-full mx-auto max-w-md shadow-lg rounded-lg bg-white py-12 px-4 sm:px-6 lg:px-8">
 					<h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
 						Create your account
 					</h2>
-					<form className="mt-8 space-y-6" action="#" method="POST">
-						<input type="hidden" name="remember" value="true" />
+					<form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
 						<div className="-space-y-px rounded-md shadow-sm">
 							<div>
-								<label htmlFor="email-address" className="sr-only">
-									Email address
-								</label>
+								<label className="sr-only">Email address</label>
 								<input
-									id="email-address"
-									name="email"
 									type="email"
-									required
 									className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-cyan-500 focus:outline-none focus:ring-cyan-500 sm:text-sm"
 									placeholder="Email address"
+									{...register('email')}
 								/>
+								{errors.email && (
+									<p className="mt-2 mb-2 text-red-500">
+										⚠ {errors.email?.message}
+									</p>
+								)}
 							</div>
 							<div>
-								<label htmlFor="password" className="sr-only">
-									Password
-								</label>
+								<label className="sr-only">Password</label>
 								<input
-									id="password"
-									name="password"
 									type="password"
-									required
 									className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-cyan-500 focus:outline-none focus:ring-cyan-500 sm:text-sm"
 									placeholder="Password"
+									{...register('password')}
 								/>
+								{errors.password && (
+									<p className="mt-2 mb-2 text-red-500">
+										⚠ {errors.password.message}
+									</p>
+								)}
 							</div>
 							<div>
-								<label
-									htmlFor="password-confirmation"
-									className="sr-only"
-								></label>
+								<label className="sr-only">Confirm password</label>
 								<input
 									type="password"
-									name="password-confirmation"
-									required
-									id="password-confirmation"
 									className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-cyan-500 focus:outline-none focus:ring-cyan-500 sm:text-sm"
 									placeholder="Confirm password"
+									{...register('passwordConfirmation')}
 								/>
+								{errors.passwordConfirmation && (
+									<p className="mt-2 mb-2 text-red-500">
+										⚠ {errors.passwordConfirmation.message}
+									</p>
+								)}
 							</div>
 						</div>
 
